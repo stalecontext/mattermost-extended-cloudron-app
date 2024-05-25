@@ -41,8 +41,8 @@ $json -I -f /app/data/config.json \
     -e "this.ServiceSettings.SiteURL = '${CLOUDRON_APP_ORIGIN}'" \
     -e "this.ServiceSettings.AllowCorsFrom = '*'" \
     -e "this.SqlSettings.DriverName = 'postgres'" \
-    -e "this.SqlSettings.DataSource = '${CLOUDRON_POSTGRESQL_USERNAME}:${CLOUDRON_POSTGRESQL_PASSWORD}@tcp(${CLOUDRON_POSTGRESQL_HOST}:${CLOUDRON_POSTGRESQL_PORT})/${CLOUDRON_POSTGRESQL_DATABASE}'" \
-    -e "this.SqlSettings.DataSourceReplicas[0] = '${CLOUDRON_POSTGRESQL_USERNAME}:${CLOUDRON_POSTGRESQL_PASSWORD}@tcp(${CLOUDRON_POSTGRESQL_HOST}:${CLOUDRON_POSTGRESQL_PORT})/${CLOUDRON_POSTGRESQL_DATABASE}'" \
+    -e "this.SqlSettings.DataSource = 'postgres://${CLOUDRON_POSTGRESQL_USERNAME}:${CLOUDRON_POSTGRESQL_PASSWORD}@${CLOUDRON_POSTGRESQL_HOST}:${CLOUDRON_POSTGRESQL_PORT}/${CLOUDRON_POSTGRESQL_DATABASE}?sslmode=disable&connect_timeout=10'" \
+    -e "this.SqlSettings.DataSourceReplicas[0] = 'postgres://${CLOUDRON_POSTGRESQL_USERNAME}:${CLOUDRON_POSTGRESQL_PASSWORD}@${CLOUDRON_POSTGRESQL_HOST}:${CLOUDRON_POSTGRESQL_PORT}/${CLOUDRON_POSTGRESQL_DATABASE}?sslmode=disable&connect_timeout=10'" \
     -e "this.LogSettings.EnableConsole = true" \
     -e "this.LogSettings.EnableFile = true" \
     -e "this.LogSettings.FileLocation = '/run/mattermost/'" \
