@@ -1,0 +1,6 @@
+To customize files in this folder, see https://docs.mattermost.com/configure/email-templates.html .
+
+Changes made inside this folder are overwritten during a mattermost update. Existing template files
+are moved into backup subdirectory. You might want to disable auto updates for mattermost to prevent
+the template files from reverting back automatically - https://docs.cloudron.io/updates/#app-updates .
+

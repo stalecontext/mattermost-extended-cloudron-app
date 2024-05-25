@@ -1,0 +1,39 @@
+{
+  "id": "org.mattermost.cloudronapp",
+  "title": "Mattermost",
+  "author": "Mattermost Team",
+  "description": "file://DESCRIPTION.md",
+  "tagline": "Slack alternative",
+  "version": "2.0.0",
+  "upstreamVersion": "9.8.0",
+  "healthCheckPath": "/",
+  "httpPort": 8065,
+  "addons": {
+    "localstorage": {},
+    "mysql": {},
+    "sendmail": { "supportsDisplayName": true },
+    "turn": {}
+  },
+  "udpPorts": {
+    "CALLS_PORT": {
+      "title": "Calls Port",
+      "description": "Port for audio/video calls when using Calls Plugin",
+      "defaultValue": 8443,
+      "containerPort": 8443
+    }
+  },
+  "manifestVersion": 2,
+  "website": "https://mattermost.org/",
+  "contactEmail": "support@cloudron.io",
+  "icon": "logo.png",
+  "changelog": "file://CHANGELOG.md",
+  "tags": [ "chat", "webchat", "slack", "gitter", "matrix", "teams", "voip" ],
+  "mediaLinks": [
+    "https://screenshots.cloudron.io/org.mattermost.cloudronapp/1.png",
+    "https://screenshots.cloudron.io/org.mattermost.cloudronapp/2.jpg"
+  ],
+  "postInstallMessage": "file://POSTINSTALL.md",
+  "minBoxVersion": "7.2.0",
+  "forumUrl": "https://forum.cloudron.io/category/26/mattermost",
+  "documentationUrl": "https://docs.cloudron.io/apps/mattermost/"
+}
