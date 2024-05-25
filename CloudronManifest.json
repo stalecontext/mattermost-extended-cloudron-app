@@ -1,16 +1,16 @@
 {
-  "id": "org.mattermost.cloudronapp",
+  "id": "org.mattermost.cloudronapp2",
   "title": "Mattermost",
   "author": "Mattermost Team",
   "description": "file://DESCRIPTION.md",
   "tagline": "Slack alternative",
-  "version": "2.0.0",
+  "version": "0.0.1",
   "upstreamVersion": "9.8.0",
   "healthCheckPath": "/",
   "httpPort": 8065,
   "addons": {
     "localstorage": {},
-    "mysql": {},
+    "postgresql": {},
     "sendmail": { "supportsDisplayName": true },
     "turn": {}
   },
