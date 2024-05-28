@@ -37,6 +37,6 @@ RUN for edition in team enterprise; do \
 RUN mkdir -p /home/cloudron/.config && \
     ln -s /app/data/mmctl /home/cloudron/.config/mmctl
 
-COPY templates.README json-merge.js config.json.template start.sh /app/pkg/
+COPY migration.load templates.README json-merge.js config.json.template start.sh /app/pkg/
 
 CMD [ "/app/pkg/start.sh" ]
