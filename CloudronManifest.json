@@ -4,8 +4,8 @@
   "author": "Mattermost Team",
   "description": "file://DESCRIPTION.md",
   "tagline": "Slack alternative",
-  "version": "0.3.0",
-  "upstreamVersion": "9.7.4",
+  "version": "1.0.0",
+  "upstreamVersion": "9.8.0",
   "healthCheckPath": "/",
   "httpPort": 8065,
   "addons": {
