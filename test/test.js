@@ -152,8 +152,10 @@ describe('Application life cycle test', function () {
     async function dismissWelcomeBubble() {
         await browser.get(`https://${app.fqdn}`);
         await waitForElement(By.xpath('//span[text()="Welcome to Mattermost"]'));
-        await waitForElement(By.xpath('//*[@id="root"]/button'));
-        await browser.findElement(By.xpath('//*[@id="root"]/button')).click();
+        await waitForElement(By.xpath('//span[contains(text(), "No thanks, I")]'));
+        await browser.findElement(By.xpath('//span[contains(text(), "No thanks, I")]')).click();
+        //await waitForElement(By.xpath('//*[@id="root"]/button'));
+        //await browser.findElement(By.xpath('//*[@id="root"]/button')).click();
         await browser.sleep(2000);
     }
 
