@@ -11,7 +11,7 @@ WORKDIR /app/code
 
 RUN apt-get update && apt-get install -y poppler-utils wv unrtf tidy && rm -rf /var/cache/apt /var/lib/apt/lists
 
-ARG VERSION=9.10.2
+ARG VERSION=9.11.1
 
 # https://docs.mattermost.com/upgrade/upgrading-mattermost-server.html#upgrading-team-edition-to-enterprise-edition
 RUN curl -L https://releases.mattermost.com/${VERSION}/mattermost-team-${VERSION}-linux-amd64.tar.gz | tar -zxf - --strip-components=1 -C /app/code/team
