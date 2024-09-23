@@ -37,6 +37,9 @@ RUN for edition in team enterprise; do \
 RUN mkdir -p /home/cloudron/.config && \
     ln -s /app/data/mmctl /home/cloudron/.config/mmctl
 
+# https://docs.mattermost.com/deploy/postgres-migration-assist-tool.html
+RUN curl -L https://github.com/mattermost/migration-assist/releases/download/v0.2/migration-assist-Linux-x86_64.tar.gz | tar zxvf - -C /usr/bin migration-assist
+
 COPY migration.load templates.README json-merge.js config.json.template start.sh /app/pkg/
 
 CMD [ "/app/pkg/start.sh" ]
