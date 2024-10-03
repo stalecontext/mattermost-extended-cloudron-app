@@ -11,11 +11,17 @@ WORKDIR /app/code
 
 RUN apt-get update && apt-get install -y poppler-utils wv unrtf tidy && rm -rf /var/cache/apt /var/lib/apt/lists
 
+# renovate: datasource=github-releases packageName=mattermost/mattermost extractVersion=^v(?<version>.+)$ versioning=semver
 ARG VERSION=9.11.2
 
 # https://docs.mattermost.com/upgrade/upgrading-mattermost-server.html#upgrading-team-edition-to-enterprise-edition
-RUN curl -L https://releases.mattermost.com/${VERSION}/mattermost-team-${VERSION}-linux-amd64.tar.gz | tar -zxf - --strip-components=1 -C /app/code/team
-RUN curl -L https://releases.mattermost.com/${VERSION}/mattermost-${VERSION}-linux-amd64.tar.gz | tar -zxf - --strip-components=1 -C /app/code/enterprise
+# in mm 10, despite --config, we have to create the config.json symlink
+RUN curl -L https://releases.mattermost.com/${VERSION}/mattermost-team-${VERSION}-linux-amd64.tar.gz | tar -zxf - --strip-components=1 -C /app/code/team && \
+    ln -sf /app/data/config.json /app/code/team/config/config.json && \
+    chown -R cloudron:cloudron /app/code/team
+RUN curl -L https://releases.mattermost.com/${VERSION}/mattermost-${VERSION}-linux-amd64.tar.gz | tar -zxf - --strip-components=1 -C /app/code/enterprise && \
+    ln -sf /app/data/config.json /app/code/enterprise/config/config.json && \
+    chown -R cloudron:cloudron /app/code/enterprise
 RUN npm install json
 
 # https://github.com/mattermost/docs/blob/master/source/deploy/postgres-migration.rst
