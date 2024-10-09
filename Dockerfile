@@ -37,7 +37,7 @@ RUN for edition in team enterprise; do \
     ln -s /app/data/plugins /app/code/${edition}/plugins && \
     ln -s /app/data/client/plugins /app/code/${edition}/client/plugins && \
     mv /app/code/${edition}/templates /app/code/${edition}/templates.original && \
-    ln -s /app/data/templates /app/code/${edition}/templates \
+    ln -s /app/data/templates /app/code/${edition}/templates; \
     done
 
 RUN mkdir -p /home/cloudron/.config && \
