@@ -56,6 +56,14 @@ $json -I -f /app/data/config.json \
     -e "this.EmailSettings.FeedbackEmail = '${CLOUDRON_MAIL_FROM}'" \
     -e "this.EmailSettings.FeedbackName = \"${CLOUDRON_MAIL_FROM_DISPLAY_NAME:-Mattermost}\"" 
 
+# Often people go into settings and incorrectly enable Let's Encrypt :/
+echo "=> Updating TLS configuration"
+$json -I -f /app/data/config.json \
+    -e "this.ServiceSettings.ServiceSettings = ':8065'" \
+    -e "this.ServiceSettings.ConnectionSecurity = ''" \
+    -e "this.ServiceSettings.UseLetsEncrypt = false" \
+    -e "this.ServiceSettings.Forward80To443 = false"
+
 mkdir -p /run/mattermost /app/data/plugins /app/data/client/plugins /app/data/mmctl /app/data/templates/backup
 [[ ! -f /app/data/templates/README ]] && cp /app/pkg/templates.README /app/data/templates/README
 new_version=$(${mm_root}/bin/mattermost version | grep ^Version: | cut -d' ' -f 2)
