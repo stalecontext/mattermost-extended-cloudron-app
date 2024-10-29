@@ -5,13 +5,15 @@
   "description": "file://DESCRIPTION.md",
   "tagline": "Slack alternative",
   "version": "1.5.0",
-  "upstreamVersion": "10.1.1",
+  "upstreamVersion": "10.1.2",
   "healthCheckPath": "/",
   "httpPort": 8065,
   "addons": {
     "localstorage": {},
     "postgresql": {},
-    "sendmail": { "supportsDisplayName": true },
+    "sendmail": {
+      "supportsDisplayName": true
+    },
     "turn": {}
   },
   "udpPorts": {
@@ -27,7 +29,15 @@
   "contactEmail": "support@cloudron.io",
   "icon": "logo.png",
   "changelog": "file://CHANGELOG.md",
-  "tags": [ "chat", "webchat", "slack", "gitter", "matrix", "teams", "voip" ],
+  "tags": [
+    "chat",
+    "webchat",
+    "slack",
+    "gitter",
+    "matrix",
+    "teams",
+    "voip"
+  ],
   "mediaLinks": [
     "https://screenshots.cloudron.io/org.mattermost.cloudronapp/1.png",
     "https://screenshots.cloudron.io/org.mattermost.cloudronapp/2.jpg"
