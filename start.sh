@@ -62,7 +62,8 @@ $json -I -f /app/data/config.json \
     -e "this.ServiceSettings.ServiceSettings = ':8065'" \
     -e "this.ServiceSettings.ConnectionSecurity = ''" \
     -e "this.ServiceSettings.UseLetsEncrypt = false" \
-    -e "this.ServiceSettings.Forward80To443 = false"
+    -e "this.ServiceSettings.Forward80To443 = false" \
+    -e "this.RateLimitSettings.PerSec = 50"
 
 mkdir -p /run/mattermost /app/data/plugins /app/data/client/plugins /app/data/mmctl /app/data/templates/backup
 [[ ! -f /app/data/templates/README ]] && cp /app/pkg/templates.README /app/data/templates/README

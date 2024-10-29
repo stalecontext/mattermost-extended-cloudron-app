@@ -231,7 +231,7 @@
     },
     "RateLimitSettings": {
         "Enable": true,
-        "PerSec": 10,
+        "PerSec": 50,
         "MaxBurst": 100,
         "MemoryStoreSize": 10000,
         "VaryByRemoteAddr": true,

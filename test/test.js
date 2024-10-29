@@ -126,7 +126,6 @@ describe('Application life cycle test', function () {
     async function checkMessage() {
         await browser.get(`https://${app.fqdn}/${TEST_TEAM}/channels/${DEFAULT_CHANNEL}`);
         await browser.sleep(4000);
-        await browser.navigate().refresh(); // not sure why, but for ci . browser.executeScript('location.reload()')
         await waitForElement(By.xpath(`//p[contains(text(), '${TEST_MESSAGE}')]`));
     }
 
