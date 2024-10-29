@@ -59,6 +59,16 @@ describe('Application life cycle test', function () {
         fs.writeFileSync(`./screenshots/${new Date().getTime()}-${this.currentTest.title.replaceAll(' ', '_')}.png`, screenshotData, 'base64');
     });
 
+    async function clearCache() {
+        await browser.manage().deleteAllCookies();
+        await browser.quit();
+        browser = null;
+        const chromeOptions = new Options().windowSize({ width: 1280, height: 1024 });
+        if (process.env.CI) chromeOptions.addArguments('no-sandbox', 'disable-dev-shm-usage', 'headless');
+        chromeOptions.addArguments(`--user-data-dir=${await fs.promises.mkdtemp('/tmp/test-')}`); // --profile-directory=Default
+        browser = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
+    }
+
     function getAppInfo() {
         const inspect = JSON.parse(execSync('cloudron inspect'));
         app = inspect.apps.filter(function (a) { return a.location === LOCATION || a.location === LOCATION + '2'; })[0];
@@ -168,8 +178,6 @@ describe('Application life cycle test', function () {
         await waitForElement(By.xpath('//span[text()="Welcome to Mattermost"]'));
         await waitForElement(By.xpath('//span[contains(text(), "No thanks, I")]'));
         await browser.findElement(By.xpath('//span[contains(text(), "No thanks, I")]')).click();
-        //await waitForElement(By.xpath('//*[@id="root"]/button'));
-        //await browser.findElement(By.xpath('//*[@id="root"]/button')).click();
         await browser.sleep(2000);
     }
 
@@ -184,6 +192,7 @@ describe('Application life cycle test', function () {
     it('can send message', sendMessage);
     it('can send email', checkEmailSetting);
 
+    it('clear cache', clearCache);
     it('backup app', function () { execSync('cloudron backup create --app ' + app.id, EXEC_ARGS); });
     it('restore app', async function () {
         await browser.get('about:blank'); // ensure we don't hit NXDOMAIN in the mean time
@@ -197,6 +206,7 @@ describe('Application life cycle test', function () {
         await browser.sleep(5000);
     });
 
+    it('can login', login);
     it('message is still there', checkMessage);
     it('can send email', checkEmailSetting);
 
@@ -231,9 +241,12 @@ describe('Application life cycle test', function () {
     it('can dismiss welcome bubble', dismissWelcomeBubble);
     it('can send message', sendMessage);
 
+    it('clear cache', clearCache);
+
     it('can update', function () { execSync('cloudron update --app ' + app.id, EXEC_ARGS); });
 
     it('can get app information', getAppInfo);
+    it('can login', login);
     it('message is still there', checkMessage);
     it('can send email', checkEmailSetting);
 
