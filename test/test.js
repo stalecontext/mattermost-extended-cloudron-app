@@ -206,6 +206,7 @@ describe('Application life cycle test', function () {
         await browser.sleep(5000);
     });
 
+    it('set landingpage seen', setLandingpageSeen);
     it('can login', login);
     it('message is still there', checkMessage);
     it('can send email', checkEmailSetting);
@@ -246,6 +247,7 @@ describe('Application life cycle test', function () {
     it('can update', function () { execSync('cloudron update --app ' + app.id, EXEC_ARGS); });
 
     it('can get app information', getAppInfo);
+    it('set landingpage seen', setLandingpageSeen);
     it('can login', login);
     it('message is still there', checkMessage);
     it('can send email', checkEmailSetting);
