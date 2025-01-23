@@ -11,7 +11,7 @@
   "dependencies": {
     "chromedriver": "^132.0.0",
     "expect.js": "^0.3.1",
-    "mocha": "^11.0.1",
-    "selenium-webdriver": "^4.27.0"
+    "mocha": "^11.1.0",
+    "selenium-webdriver": "^4.28.1"
   }
 }
