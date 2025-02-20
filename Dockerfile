@@ -12,7 +12,7 @@ WORKDIR /app/code
 RUN apt-get update && apt-get install -y poppler-utils wv unrtf tidy && rm -rf /var/cache/apt /var/lib/apt/lists
 
 # renovate: datasource=github-releases depName=mattermost/mattermost versioning=semver extractVersion=^v(?<version>.+)$
-ARG MM_VERSION=10.4.2
+ARG MM_VERSION=10.4.3
 
 # https://docs.mattermost.com/upgrade/upgrading-mattermost-server.html#upgrading-team-edition-to-enterprise-edition
 # in mm 10, despite --config, we have to create the config.json symlink
