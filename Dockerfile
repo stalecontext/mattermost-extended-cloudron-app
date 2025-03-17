@@ -1,4 +1,4 @@
-FROM cloudron/base:4.2.0@sha256:46da2fffb36353ef714f97ae8e962bd2c212ca091108d768ba473078319a47f4 AS base
+FROM cloudron/base:5.0.0@sha256:04fd70dbd8ad6149c19de39e35718e024417c3e01dc9c6637eaf4a41ec4e596c AS base
 
 FROM ghcr.io/dimitri/pgloader:latest@sha256:3727cb8b65f3deecdfd126311e34bc0cece10ab66558fd08759ffce38bfea9c0 AS pgloader
 
