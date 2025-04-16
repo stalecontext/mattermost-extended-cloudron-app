@@ -5,7 +5,7 @@
   "description": "file://DESCRIPTION.md",
   "tagline": "Slack alternative",
   "version": "1.11.1",
-  "upstreamVersion": "10.6.2",
+  "upstreamVersion": "10.7.0",
   "healthCheckPath": "/",
   "httpPort": 8065,
   "addons": {
