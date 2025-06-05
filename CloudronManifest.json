@@ -45,5 +45,5 @@
   "postInstallMessage": "file://POSTINSTALL.md",
   "minBoxVersion": "7.2.0",
   "forumUrl": "https://forum.cloudron.io/category/26/mattermost",
-  "documentationUrl": "https://docs.cloudron.io/apps/mattermost/"
+  "documentationUrl": "https://docs.cloudron.io/packages/mattermost/"
 }
