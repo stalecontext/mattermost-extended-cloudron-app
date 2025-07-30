@@ -16,6 +16,11 @@
     },
     "turn": {}
   },
+  "checklist": {
+      "register-admin": {
+      "message": "On first visit, register an admin user in the app and invite other users."
+    }
+  },
   "udpPorts": {
     "CALLS_PORT": {
       "title": "Calls Port",
@@ -42,8 +47,7 @@
     "https://screenshots.cloudron.io/org.mattermost.cloudronapp/1.png",
     "https://screenshots.cloudron.io/org.mattermost.cloudronapp/2.jpg"
   ],
-  "postInstallMessage": "file://POSTINSTALL.md",
-  "minBoxVersion": "7.2.0",
+  "minBoxVersion": "8.1.0",
   "forumUrl": "https://forum.cloudron.io/category/26/mattermost",
   "documentationUrl": "https://docs.cloudron.io/packages/mattermost/"
 }
