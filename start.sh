@@ -91,6 +91,11 @@ fi
 
 echo "${new_version}" > /app/data/templates/VERSION
 
+# this value has defaulted to true since October 2022 (v5.28) . If false, mm won't start anymore
+# https://github.com/mattermost/mattermost/issues/34084
+# https://forum.mattermost.com/t/viewing-accessing-archived-channels-v11/22626
+$json -I -f /app/data/config.json -e "delete this.TeamSettings.ExperimentalViewArchivedChannels"
+
 echo "=> Changing ownership"
 chown -R cloudron:cloudron /app/data /run/mattermost
 
