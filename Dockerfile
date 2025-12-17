@@ -25,11 +25,11 @@ RUN curl -L https://releases.mattermost.com/${MM_VERSION}/mattermost-${MM_VERSIO
 RUN npm install json
 
 # https://github.com/mattermost/docs/blob/master/source/deploy/postgres-migration.rst
-ARG GOVERSION=1.21.1
+ARG GOVERSION=1.25.5
 ENV GOROOT /usr/local/go-${GOVERSION}
 ENV PATH $GOROOT/bin:$PATH
 RUN mkdir -p /usr/local/go-${GOVERSION} && \
-    curl -L https://storage.googleapis.com/golang/go${GOVERSION}.linux-amd64.tar.gz | tar zxf - -C /usr/local/go-${GOVERSION} --strip-components 1
+    curl -L https://go.dev/dl/go${GOVERSION}.linux-amd64.tar.gz | tar zxf - -C /usr/local/go-${GOVERSION} --strip-components 1
 RUN go install github.com/mattermost/morph/cmd/morph@v1
 RUN go install github.com/mattermost/dbcmp/cmd/dbcmp@latest
 
