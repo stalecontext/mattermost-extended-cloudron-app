@@ -18,7 +18,7 @@
   },
   "checklist": {
     "register-admin": {
-      "message": "On first visit, register an admin user in the app and invite other users."
+      "message": "On first visit, register an admin user in the app and invite other users"
     }
   },
   "udpPorts": {
