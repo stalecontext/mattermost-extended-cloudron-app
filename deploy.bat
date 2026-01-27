@@ -57,8 +57,8 @@ if errorlevel 1 (
 )
 
 :: Update Dockerfile download URL to use custom fork
-powershell -Command "(Get-Content Dockerfile) -replace 'curl -L https://releases.mattermost.com/\$\{MM_VERSION\}/mattermost-team-\$\{MM_VERSION\}-linux-amd64.tar.gz', 'curl -L https://github.com/stalecontext/mattermost/releases/download/v${MM_VERSION}/mattermost-team-${MM_VERSION}-linux-amd64.tar.gz' | Set-Content Dockerfile"
-powershell -Command "(Get-Content Dockerfile) -replace 'curl -L https://releases.mattermost.com/\$\{MM_VERSION\}/mattermost-\$\{MM_VERSION\}-linux-amd64.tar.gz', 'curl -L https://github.com/stalecontext/mattermost/releases/download/v${MM_VERSION}/mattermost-${MM_VERSION}-linux-amd64.tar.gz' | Set-Content Dockerfile"
+powershell -Command "(Get-Content Dockerfile) -replace 'curl -L https://releases.mattermost.com/\$\{MM_VERSION\}/mattermost-team-\$\{MM_VERSION\}-linux-amd64.tar.gz', 'curl -L https://github.com/stalecontext/mattermost-extended/releases/download/v${MM_VERSION}/mattermost-team-${MM_VERSION}-linux-amd64.tar.gz' | Set-Content Dockerfile"
+powershell -Command "(Get-Content Dockerfile) -replace 'curl -L https://releases.mattermost.com/\$\{MM_VERSION\}/mattermost-\$\{MM_VERSION\}-linux-amd64.tar.gz', 'curl -L https://github.com/stalecontext/mattermost-extended/releases/download/v${MM_VERSION}/mattermost-${MM_VERSION}-linux-amd64.tar.gz' | Set-Content Dockerfile"
 
 :: Backup CloudronManifest.json
 copy CloudronManifest.json CloudronManifest.json.bak >nul

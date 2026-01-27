@@ -11,9 +11,9 @@ echo ===========================================================================
 echo.
 
 :: Check if already configured
-git remote -v | findstr "stalecontext/mattermost-cloudron-app" >nul
+git remote -v | findstr "stalecontext/mattermost-extended-cloudron-app" >nul
 if not errorlevel 1 (
-    echo This repository is already configured for stalecontext/mattermost-cloudron-app
+    echo This repository is already configured for stalecontext/mattermost-extended-cloudron-app
     echo.
     git remote -v
     echo.
@@ -28,10 +28,10 @@ echo.
 echo IMPORTANT: Before running this script:
 echo 1. Go to https://git.cloudron.io/cloudron/mattermost-app
 echo 2. Copy the repository (or create a new repo on GitHub)
-echo 3. Create a new repository: https://github.com/stalecontext/mattermost-cloudron-app
+echo 3. Create a new repository: https://github.com/stalecontext/mattermost-extended-cloudron-app
 echo 4. You can push the current code to initialize it
 echo.
-set /p CREATED="Have you created stalecontext/mattermost-cloudron-app? (Y/N): "
+set /p CREATED="Have you created stalecontext/mattermost-extended-cloudron-app? (Y/N): "
 if /i not "%CREATED%"=="Y" (
     echo Please create the repository first, then run this script again.
     exit /b 1
@@ -47,7 +47,7 @@ if errorlevel 1 (
 )
 
 :: Add your fork as origin
-git remote add origin https://github.com/stalecontext/mattermost-cloudron-app.git
+git remote add origin https://github.com/stalecontext/mattermost-extended-cloudron-app.git
 if errorlevel 1 (
     echo Error: Failed to add origin remote
     exit /b 1
@@ -81,7 +81,7 @@ echo SUCCESS! Repository configured
 echo ================================================================================
 echo.
 echo Remotes:
-echo   origin   = stalecontext/mattermost-cloudron-app (your fork)
+echo   origin   = stalecontext/mattermost-extended-cloudron-app (your fork)
 echo   upstream = cloudron/mattermost-app (official)
 echo.
 echo Next steps:
