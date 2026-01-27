@@ -2,55 +2,81 @@
 setlocal enabledelayedexpansion
 
 :: Mattermost Cloudron App Deploy Script
-:: Usage: deploy.bat <custom-version> [cloudron-revision]
+:: Usage: deploy.bat <custom-version>
 :: Example: deploy.bat 9.11.0-custom.1
-:: Example: deploy.bat 9.11.0-custom.1 2
 
 if "%~1"=="" (
-    echo Usage: deploy.bat ^<custom-version^> [cloudron-revision]
+    echo Usage: deploy.bat ^<custom-version^>
     echo Example: deploy.bat 9.11.0-custom.1
-    echo Example: deploy.bat 9.11.0-custom.1 2
     exit /b 1
 )
 
 set CUSTOM_VERSION=%~1
-set CLOUDRON_REV=%~2
 
 :: Remove v prefix if present
 set CUSTOM_VERSION=%CUSTOM_VERSION:v=%
 
-:: Extract base version (9.11.0 from 9.11.0-custom.1)
-for /f "tokens=1 delims=-" %%a in ("%CUSTOM_VERSION%") do set BASE_VERSION=%%a
-
-:: Default to revision 1 if not specified
-if "%CLOUDRON_REV%"=="" set CLOUDRON_REV=1
-
-set CLOUDRON_VERSION=%BASE_VERSION%-%CLOUDRON_REV%
-
 echo.
 echo ================================================================================
-echo Deploying Mattermost Custom Build
+echo Mattermost Custom Build - Cloudron Deployment
 echo ================================================================================
 echo Custom Build Version: %CUSTOM_VERSION%
-echo Cloudron App Version: %CLOUDRON_VERSION%
 echo ================================================================================
 echo.
 
-:: Check if on main or master branch
-for /f "tokens=*" %%i in ('git rev-parse --abbrev-ref HEAD') do set CURRENT_BRANCH=%%i
-
-echo %CURRENT_BRANCH% | findstr /i "main master" >nul
+:: Check if cloudron CLI is installed
+echo Checking for Cloudron CLI...
+where cloudron >nul 2>&1
 if errorlevel 1 (
-    echo Warning: Not on main/master branch (currently on %CURRENT_BRANCH%). Continue? (Y/N)
-    set /p CONTINUE=
-    if /i not "!CONTINUE!"=="Y" exit /b 1
+    echo.
+    echo ERROR: Cloudron CLI is not installed or not in PATH
+    echo.
+    echo Install it with: npm install -g cloudron
+    echo Or see: https://docs.cloudron.io/packaging/cli/
+    echo.
+    exit /b 1
 )
+
+echo Cloudron CLI found: OK
+echo.
+
+:: Check if docker is logged in
+docker info >nul 2>&1
+if errorlevel 1 (
+    echo.
+    echo ERROR: Docker is not running or not logged in
+    echo.
+    echo Please run: docker login
+    echo.
+    exit /b 1
+)
+
+echo Docker login: OK
+echo.
+
+:: Check if cloudron build is configured
+if not exist "%USERPROFILE%\.cloudron.json" (
+    echo.
+    echo ERROR: Cloudron build not configured yet
+    echo.
+    echo Please run configure-cloudron.bat first to set up Docker Hub integration.
+    echo.
+    exit /b 1
+)
+
+echo Cloudron build configured: OK
+echo.
+
+echo ================================================================================
+echo Updating Dockerfile
+echo ================================================================================
+echo.
 
 :: Backup Dockerfile
 copy Dockerfile Dockerfile.bak >nul
 
 :: Update Dockerfile MM_VERSION
-echo Updating Dockerfile...
+echo Updating MM_VERSION to %CUSTOM_VERSION%...
 powershell -Command "(Get-Content Dockerfile) -replace 'ARG MM_VERSION=.*', 'ARG MM_VERSION=%CUSTOM_VERSION%' | Set-Content Dockerfile"
 if errorlevel 1 (
     echo Error: Failed to update Dockerfile
@@ -58,71 +84,60 @@ if errorlevel 1 (
     exit /b 1
 )
 
-:: Update Dockerfile download URL to use custom fork
-powershell -Command "(Get-Content Dockerfile) -replace 'curl -L https://releases.mattermost.com/\$\{MM_VERSION\}/mattermost-team-\$\{MM_VERSION\}-linux-amd64.tar.gz', 'curl -L https://github.com/stalecontext/mattermost-extended/releases/download/v${MM_VERSION}/mattermost-team-${MM_VERSION}-linux-amd64.tar.gz' | Set-Content Dockerfile"
-powershell -Command "(Get-Content Dockerfile) -replace 'curl -L https://releases.mattermost.com/\$\{MM_VERSION\}/mattermost-\$\{MM_VERSION\}-linux-amd64.tar.gz', 'curl -L https://github.com/stalecontext/mattermost-extended/releases/download/v${MM_VERSION}/mattermost-${MM_VERSION}-linux-amd64.tar.gz' | Set-Content Dockerfile"
+:: Update Dockerfile download URLs to use custom fork
+powershell -Command "(Get-Content Dockerfile) -replace 'https://releases.mattermost.com/\$\{MM_VERSION\}/mattermost-team-\$\{MM_VERSION\}', 'https://github.com/stalecontext/mattermost-extended/releases/download/v${MM_VERSION}/mattermost-team-${MM_VERSION}' | Set-Content Dockerfile"
+powershell -Command "(Get-Content Dockerfile) -replace 'https://releases.mattermost.com/\$\{MM_VERSION\}/mattermost-\$\{MM_VERSION\}-linux', 'https://github.com/stalecontext/mattermost-extended/releases/download/v${MM_VERSION}/mattermost-${MM_VERSION}-linux' | Set-Content Dockerfile"
 
-:: Backup CloudronManifest.json
-copy CloudronManifest.json CloudronManifest.json.bak >nul
-
-:: Update CloudronManifest.json
-echo Updating CloudronManifest.json...
-powershell -Command "$json = Get-Content CloudronManifest.json | ConvertFrom-Json; $json.version = '%CLOUDRON_VERSION%'; $json.upstreamVersion = '%CUSTOM_VERSION%'; $json | ConvertTo-Json -Depth 10 | Set-Content CloudronManifest.json"
-if errorlevel 1 (
-    echo Error: Failed to update CloudronManifest.json
-    move /y Dockerfile.bak Dockerfile >nul
-    move /y CloudronManifest.json.bak CloudronManifest.json >nul
-    exit /b 1
-)
-
-:: Clean up backups
-del Dockerfile.bak CloudronManifest.json.bak
+:: Clean up backup
+del Dockerfile.bak
 
 :: Show changes
 echo.
-echo Changes to commit:
-git diff Dockerfile CloudronManifest.json
-
+echo Changes made to Dockerfile:
+git diff Dockerfile
 echo.
-echo Commit and push these changes? (Y/N)
-set /p CONFIRM=
-if /i not "%CONFIRM%"=="Y" (
-    echo Deployment cancelled. Changes preserved.
-    exit /b 0
-)
 
-:: Commit and push
+echo ================================================================================
+echo Building and Pushing to Docker Hub
+echo ================================================================================
 echo.
-echo Committing changes...
-git add Dockerfile CloudronManifest.json
-git commit -m "Deploy custom build v%CUSTOM_VERSION% (Cloudron v%CLOUDRON_VERSION%)"
+echo This will:
+echo 1. Build the Docker image locally
+echo 2. Push it to your Docker Hub repository
+echo 3. Cloudron will detect the update and show UPDATE button
+echo.
+
+:: Build and push
+cloudron build
 if errorlevel 1 (
-    echo Error: Commit failed
-    exit /b 1
-)
-
-echo.
-echo Pushing to GitHub...
-git push
-if errorlevel 1 (
-    echo Error: Push failed
+    echo.
+    echo ERROR: Cloudron build failed
+    echo.
+    echo Restoring original Dockerfile...
+    git checkout Dockerfile
     exit /b 1
 )
 
 echo.
 echo ================================================================================
-echo SUCCESS! Deployment committed and pushed
+echo SUCCESS! Build Pushed to Docker Hub
 echo ================================================================================
+echo.
+echo The new version has been pushed to Docker Hub.
 echo.
 echo Next steps:
-echo 1. Wait a few minutes for Cloudron to detect the update
-echo 2. Go to your Cloudron dashboard
+echo 1. Go to your Cloudron dashboard
+echo 2. Wait 1-2 minutes for Cloudron to detect the update
 echo 3. Click the UPDATE button when it appears
 echo 4. Monitor logs during update
 echo.
-echo To rollback if needed:
-echo   git revert HEAD
+echo To commit Dockerfile changes:
+echo   git add Dockerfile
+echo   git commit -m "Update to %CUSTOM_VERSION%"
 echo   git push
+echo.
+echo To revert Dockerfile changes:
+echo   git checkout Dockerfile
 echo.
 echo ================================================================================
 
