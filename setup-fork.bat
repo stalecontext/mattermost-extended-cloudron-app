@@ -65,13 +65,16 @@ echo.
 echo Configured remotes:
 git remote -v
 
-:: Push to your fork
+:: Determine current branch name (master or main)
+for /f "tokens=*" %%i in ('git rev-parse --abbrev-ref HEAD') do set CURRENT_BRANCH=%%i
+
+:: Push to your fork using current branch
 echo.
-echo Pushing to your fork...
-git push -u origin main
+echo Pushing %CURRENT_BRANCH% branch to your fork...
+git push -u origin %CURRENT_BRANCH%
 if errorlevel 1 (
     echo Note: Push may have failed. You might need to:
-    echo   git push -u origin main --force
+    echo   git push -u origin %CURRENT_BRANCH% --force
     echo if the remote repository is empty.
 )
 

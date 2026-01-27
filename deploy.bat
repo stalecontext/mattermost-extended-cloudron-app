@@ -36,10 +36,12 @@ echo Cloudron App Version: %CLOUDRON_VERSION%
 echo ================================================================================
 echo.
 
-:: Check if on main branch
-git branch --show-current | findstr "main" >nul
+:: Check if on main or master branch
+for /f "tokens=*" %%i in ('git rev-parse --abbrev-ref HEAD') do set CURRENT_BRANCH=%%i
+
+echo %CURRENT_BRANCH% | findstr /i "main master" >nul
 if errorlevel 1 (
-    echo Warning: Not on main branch. Continue? (Y/N)
+    echo Warning: Not on main/master branch (currently on %CURRENT_BRANCH%). Continue? (Y/N)
     set /p CONTINUE=
     if /i not "!CONTINUE!"=="Y" exit /b 1
 )
