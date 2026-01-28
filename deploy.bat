@@ -110,7 +110,7 @@ echo.
 :: Build and push
 :: Note: Cloudron CLI needs to run from C: drive for config file access
 :: Run cloudron build in a new cmd session with USERPROFILE set to C: drive
-cmd /c "set USERPROFILE=C:\Users\%USERNAME% && set HOME=C:\Users\%USERNAME% && cd /d %~dp0 && C: && cloudron build"
+cmd /c "set USERPROFILE=C:\Users\%USERNAME% && set HOME=C:\Users\%USERNAME% && cd /d %~dp0 && cloudron build"
 if errorlevel 1 (
     echo.
     echo ERROR: Cloudron build failed
