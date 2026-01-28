@@ -123,7 +123,7 @@ echo.
 :: Build and push
 :: Note: Cloudron CLI needs to run with USERPROFILE pointing to C: drive
 :: Use wrapper script to ensure environment variables are set
-call cloudron-wrapper.bat build
+./cloudron-wrapper.bat build
 if errorlevel 1 (
     echo.
     echo ERROR: Cloudron build failed
