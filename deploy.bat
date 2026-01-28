@@ -108,11 +108,9 @@ echo 3. Cloudron will detect the update and show UPDATE button
 echo.
 
 :: Build and push
-:: Note: Cloudron CLI needs to run from C: drive for config file access
-:: Set environment variables with quotes to prevent trailing spaces
-set "USERPROFILE=C:\Users\%USERNAME%"
-set "HOME=C:\Users\%USERNAME%"
-cloudron build
+:: Note: Cloudron CLI needs to run with USERPROFILE pointing to C: drive
+:: Use wrapper script to ensure environment variables are set
+call cloudron-wrapper.bat build
 if errorlevel 1 (
     echo.
     echo ERROR: Cloudron build failed
