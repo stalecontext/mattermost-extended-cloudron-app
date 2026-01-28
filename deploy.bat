@@ -68,6 +68,19 @@ echo Cloudron build configured: OK
 echo.
 
 echo ================================================================================
+echo Fixing Shell Script Line Endings
+echo ================================================================================
+echo.
+echo Ensuring start.sh has Unix (LF) line endings...
+powershell -Command "$content = Get-Content 'start.sh' -Raw; $content = $content -replace \"`r`n\", \"`n\"; $content = $content -replace \"`r\", \"`n\"; [System.IO.File]::WriteAllText('start.sh', $content)"
+if errorlevel 1 (
+    echo Error: Failed to fix line endings
+    exit /b 1
+)
+echo Line endings fixed: OK
+echo.
+
+echo ================================================================================
 echo Updating Dockerfile
 echo ================================================================================
 echo.
@@ -119,6 +132,51 @@ if errorlevel 1 (
     git checkout Dockerfile
     exit /b 1
 )
+
+:: Extract version from CloudronManifest.json
+echo.
+echo ================================================================================
+echo Tagging Image with CloudronManifest.json Version
+echo ================================================================================
+echo.
+for /f "tokens=2 delims=:" %%a in ('findstr /R "\"version\":" CloudronManifest.json') do (
+    set VERSION_LINE=%%a
+)
+:: Remove quotes, commas, and spaces
+set CLOUDRON_VERSION=%VERSION_LINE:"=%
+set CLOUDRON_VERSION=%CLOUDRON_VERSION:,=%
+set CLOUDRON_VERSION=%CLOUDRON_VERSION: =%
+
+echo CloudronManifest.json version: %CLOUDRON_VERSION%
+
+:: Get the latest timestamp-based tag
+for /f "tokens=*" %%i in ('docker images --format "{{.Tag}}" stalecontext/mattermost-extended-cloudron ^| findstr /R "^[0-9][0-9]*-"') do (
+    set LATEST_TAG=%%i
+    goto :found_tag
+)
+:found_tag
+
+echo Latest build tag: %LATEST_TAG%
+
+:: Tag with version
+echo Tagging as %CLOUDRON_VERSION%...
+docker tag stalecontext/mattermost-extended-cloudron:%LATEST_TAG% stalecontext/mattermost-extended-cloudron:%CLOUDRON_VERSION%
+if errorlevel 1 (
+    echo Warning: Failed to tag image with version %CLOUDRON_VERSION%
+    goto :skip_version_push
+)
+
+:: Push version tag
+echo Pushing %CLOUDRON_VERSION% to Docker Hub...
+docker push stalecontext/mattermost-extended-cloudron:%CLOUDRON_VERSION%
+if errorlevel 1 (
+    echo Warning: Failed to push version tag %CLOUDRON_VERSION%
+    goto :skip_version_push
+)
+
+echo Successfully pushed version tag %CLOUDRON_VERSION%!
+
+:skip_version_push
 
 echo.
 echo ================================================================================

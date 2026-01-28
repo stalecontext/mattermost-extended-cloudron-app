@@ -1,2 +1,4 @@
 node_modules/
 
+# Private update script
+update-cloudron.bat
