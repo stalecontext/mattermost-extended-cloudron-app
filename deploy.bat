@@ -108,6 +108,9 @@ echo 3. Cloudron will detect the update and show UPDATE button
 echo.
 
 :: Build and push
+:: Note: Cloudron CLI needs to run from C: drive for config file access
+C:
+cd /d %~dp0
 cloudron build
 if errorlevel 1 (
     echo.
