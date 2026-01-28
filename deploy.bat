@@ -109,21 +109,8 @@ echo.
 
 :: Build and push
 :: Note: Cloudron CLI needs to run from C: drive for config file access
-:: Save original values
-set ORIGINAL_USERPROFILE=%USERPROFILE%
-set ORIGINAL_HOME=%HOME%
-
-:: Set USERPROFILE to C: drive (cloudron CLI uses this to find .cloudron.json)
-set USERPROFILE=C:\Users\%USERNAME%
-set HOME=C:\Users\%USERNAME%
-
-C:
-cd /d %~dp0
-cloudron build
-
-:: Restore original values
-set USERPROFILE=%ORIGINAL_USERPROFILE%
-set HOME=%ORIGINAL_HOME%
+:: Run cloudron build in a new cmd session with USERPROFILE set to C: drive
+cmd /c "set USERPROFILE=C:\Users\%USERNAME% && set HOME=C:\Users\%USERNAME% && cd /d %~dp0 && C: && cloudron build"
 if errorlevel 1 (
     echo.
     echo ERROR: Cloudron build failed
