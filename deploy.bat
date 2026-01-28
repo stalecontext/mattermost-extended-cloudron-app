@@ -121,14 +121,24 @@ echo 3. Cloudron will detect the update and show UPDATE button
 echo.
 
 :: Build and push
-:: Note: Cloudron CLI needs to run with USERPROFILE pointing to C: drive
-:: Use wrapper script to ensure environment variables are set
-./cloudron-wrapper.bat build
+echo Building Docker image with --no-cache to ensure fresh build...
+docker build --no-cache -t stalecontext/mattermost-extended-cloudron:temp-build .
 if errorlevel 1 (
     echo.
-    echo ERROR: Cloudron build failed
+    echo ERROR: Docker build failed
     echo.
     echo Restoring original Dockerfile...
+    git checkout Dockerfile
+    exit /b 1
+)
+
+echo.
+echo Pushing to Docker Hub...
+docker push stalecontext/mattermost-extended-cloudron:temp-build
+if errorlevel 1 (
+    echo.
+    echo ERROR: Docker push failed
+    echo.
     git checkout Dockerfile
     exit /b 1
 )
@@ -149,18 +159,9 @@ set CLOUDRON_VERSION=%CLOUDRON_VERSION: =%
 
 echo CloudronManifest.json version: %CLOUDRON_VERSION%
 
-:: Get the latest timestamp-based tag
-for /f "tokens=*" %%i in ('docker images --format "{{.Tag}}" stalecontext/mattermost-extended-cloudron ^| findstr /R "^[0-9][0-9]*-"') do (
-    set LATEST_TAG=%%i
-    goto :found_tag
-)
-:found_tag
-
-echo Latest build tag: %LATEST_TAG%
-
 :: Tag with version
-echo Tagging as %CLOUDRON_VERSION%...
-docker tag stalecontext/mattermost-extended-cloudron:%LATEST_TAG% stalecontext/mattermost-extended-cloudron:%CLOUDRON_VERSION%
+echo Tagging temp-build as %CLOUDRON_VERSION%...
+docker tag stalecontext/mattermost-extended-cloudron:temp-build stalecontext/mattermost-extended-cloudron:%CLOUDRON_VERSION%
 if errorlevel 1 (
     echo Warning: Failed to tag image with version %CLOUDRON_VERSION%
     goto :skip_version_push
@@ -175,6 +176,9 @@ if errorlevel 1 (
 )
 
 echo Successfully pushed version tag %CLOUDRON_VERSION%!
+
+:: Clean up temp tag
+docker rmi stalecontext/mattermost-extended-cloudron:temp-build >nul 2>&1
 
 :skip_version_push
 
