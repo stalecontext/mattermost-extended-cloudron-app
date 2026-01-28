@@ -12,15 +12,15 @@ WORKDIR /app/code
 RUN apt-get update && apt-get install -y poppler-utils wv unrtf tidy && rm -rf /var/cache/apt /var/lib/apt/lists
 
 # renovate: datasource=github-releases depName=mattermost/mattermost versioning=semver extractVersion=^v(?<version>.+)$
-ARG MM_VERSION=11.3.0
+ARG MM_VERSION=11.3.0-custom.3
 
 # https://docs.mattermost.com/upgrade/upgrading-mattermost-server.html#upgrading-team-edition-to-enterprise-edition
 # in mm 10, despite --config, we have to create the config.json symlink
-RUN curl -L https://releases.mattermost.com/${MM_VERSION}/mattermost-team-${MM_VERSION}-linux-amd64.tar.gz | tar -zxf - --strip-components=1 -C /app/code/team && \
+RUN curl -L https://github.com/stalecontext/mattermost-extended/releases/download/v${MM_VERSION}/mattermost-team-linux-amd64.tar.gz | tar -zxf - --strip-components=1 -C /app/code/team && \
     ln -sf /app/data/config.json /app/code/team/config/config.json && \
     chown -R cloudron:cloudron /app/code/team
-RUN curl -L https://releases.mattermost.com/${MM_VERSION}/mattermost-${MM_VERSION}-linux-amd64.tar.gz | tar -zxf - --strip-components=1 -C /app/code/enterprise && \
-    ln -sf /app/data/config.json /app/code/enterprise/config/config.json && \
+# Copy team edition to enterprise folder (we only build team edition)
+RUN cp -a /app/code/team/. /app/code/enterprise/ && \
     chown -R cloudron:cloudron /app/code/enterprise
 RUN npm install json
 
