@@ -16,7 +16,7 @@ ARG MM_VERSION=11.3.0-custom.5
 
 # https://docs.mattermost.com/upgrade/upgrading-mattermost-server.html#upgrading-team-edition-to-enterprise-edition
 # in mm 10, despite --config, we have to create the config.json symlink
-RUN curl -L https://github.com/stalecontext/mattermost-extended/releases/download/v${MM_VERSION}/mattermost-team-${MM_VERSION}-linux-amd64.tar.gz | tar -zxf - --strip-components=1 -C /app/code/team && \
+RUN curl -L https://github.com/stalecontext/mattermost-extended/releases/download/v${MM_VERSION}/mattermost-team-linux-amd64.tar.gz | tar -zxf - --strip-components=1 -C /app/code/team && \
     ln -sf /app/data/config.json /app/code/team/config/config.json && \
     chown -R cloudron:cloudron /app/code/team
 # Copy team edition to enterprise folder (we only build team edition)
