@@ -1,4 +1,8 @@
 node_modules/
 
-# Private update script
+# Private scripts (contain your specific Cloudron app location)
 update-cloudron.bat
+
+# Cloudron CLI configuration (created by configure-cloudron.bat)
+.cloudron.json
+DEPLOY.md
